@@ -1,0 +1,237 @@
+name: Windows Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    permissions:
+      contents: write
+    runs-on: windows-latest
+
+    env:
+      BOOST_ROOT: C:/Boost
+      DCMTK_DIR: C:/tools/dcmtk-20241211-ac00290
+      OpenCV_DIR: C:/tools/opencv/build
+      OpenJPEG_DIR: C:/tools/openjpeg-v2.5.3-windows-x64
+      Qt5_DIR: C:/Qt5/5.15.2/msvc2019_64/lib/cmake/Qt5
+
+    steps:
+      - name: Checkout main repo
+        uses: actions/checkout@v4
+
+      - name: Clone required forks
+        run: |
+          echo "Cloning core dev forks with OpenCV fixes..."
+          git clone https://github.com/kaygdev/oct_cpp_framework.git
+          git clone https://github.com/kaygdev/LibE2E.git
+          git clone https://github.com/kaygdev/LibOctData.git
+          git clone https://github.com/kaygdev/OCT-Marker.git
+          git clone https://github.com/kaygdev/convert_oct_data.git
+
+      - name: Add missing boost find_package
+        run: |
+          (Get-Content ${{ github.workspace }}/oct_cpp_framework/CMakeLists.txt) -replace 'find_package\(OpenCV REQUIRED\)', "find_package(OpenCV REQUIRED)`r`nfind_package(Boost REQUIRED)" | Set-Content ${{ github.workspace }}/oct_cpp_framework/CMakeLists.txt
+          (Get-Content ${{ github.workspace }}/LibE2E/CMakeLists.txt) -replace 'find_package\(OpenCV REQUIRED\)', "find_package(OpenCV REQUIRED)`r`nfind_package(Boost REQUIRED)" | Set-Content ${{ github.workspace }}/LibE2E/CMakeLists.txt
+
+      - name: Restore OpenCV cache
+        id: restore-opencv-cache
+        uses: actions/cache/restore@v4
+        with:
+          key: opencv-4.11.0-windows-${{ runner.os }}
+          path: C:/tools/opencv
+
+      - name: Install OpenCV via Chocolatey
+        if: steps.restore-opencv-cache.outputs.cache-hit != 'true'
+        run: choco install opencv --version=4.11.0 -y --no-progress
+
+      - name: Save OpenCV cache
+        uses: actions/cache/save@v4
+        if: steps.restore-opencv-cache.outputs.cache-hit != 'true'
+        with:
+          key: opencv-4.11.0-windows-${{ runner.os }}
+          path: C:/tools/opencv
+
+      - name: Download Zlib from source
+        run: |
+          curl -L -o C:/tools/zlib.zip https://zlib.net/zlib131.zip
+          tar -xf C:/tools/zlib.zip -C C:/tools
+
+      - name: Build Zlib
+        shell: cmd
+        run: |
+          cd /d C:/tools/zlib-1.3.1
+          mkdir build && cd build
+          cmake .. -G "Visual Studio 17 2022"
+          cmake --build . --config Release --target install
+
+      - name: Restore Boost zip cache
+        id: restore-boost-zip-cache
+        uses: actions/cache/restore@v4
+        with:
+          key: boost-1.88.0-zip-${{ runner.os }}
+          path: C:/tools/boost.zip
+
+      - name: Download Boost from source
+        if: steps.restore-boost-zip-cache.outputs.cache-hit != 'true'
+        run: |
+          curl -L -o C:/tools/boost.zip https://archives.boost.io/release/1.88.0/source/boost_1_88_0.zip
+          mkdir C:/local
+          tar -xf C:/tools/boost.zip -C C:/local
+
+      - name: Save Boost zip cache
+        uses: actions/cache/save@v4
+        if: steps.restore-boost-zip-cache.outputs.cache-hit != 'true'
+        with:
+          key: boost-1.88.0-zip-${{ runner.os }}
+          path: C:/tools/boost.zip
+
+      - name: Restore Boost build cache
+        id: restore-boost-build-cache
+        uses: actions/cache/restore@v4
+        with:
+          key: boost-1.88.0-build-${{ runner.os }}
+          path: C:/Boost
+
+      - name: Run Boost Bootstrap Script
+        if: steps.restore-boost-build-cache.outputs.cache-hit != 'true'
+        shell: cmd
+        run: |
+          cd /d C:/local/boost_1_88_0
+          bootstrap.bat
+
+      - name: Build and Install Boost Libraries
+        if: steps.restore-boost-build-cache.outputs.cache-hit != 'true'
+        shell: cmd
+        run: |
+          cd /d C:/local/boost_1_88_0
+          b2 -j%NUMBER_OF_PROCESSORS% --with-iostreams --with-locale --with-log --with-program_options --with-serialization --prefix=C:/Boost install
+
+      - name: Save Boost build cache
+        uses: actions/cache/save@v4
+        if: steps.restore-boost-build-cache.outputs.cache-hit != 'true'
+        with:
+          key: boost-1.88.0-build-${{ runner.os }}
+          path: C:/Boost
+
+      - name: Download OpenJPEG from source
+        run: |
+          curl -L -o C:/tools/openjpeg.zip https://github.com/uclouvain/openjpeg/releases/download/v2.5.3/openjpeg-v2.5.3-windows-x64.zip
+          tar -xf C:/tools/openjpeg.zip -C C:/tools
+
+      - name: Download libtiff from source
+        run: |
+          curl -L -o C:/tools/tiff.zip https://download.osgeo.org/libtiff/tiff-4.7.0.zip
+          tar -xf C:/tools/tiff.zip -C C:/tools
+
+      - name: Build libtiff
+        shell: cmd
+        run: |
+          cd /d C:/tools/tiff-4.7.0
+          cmake -G "Visual Studio 17 2022"
+          cmake --build . --config Release --target install
+
+      - name: Download DCMTK
+        run: |
+          curl -L -o C:/tools/dcmtk.zip https://github.com/DCMTK/dcmtk/releases/download/DCMTK-3.6.9/dcmtk-20241211-ac00290-win64.zip
+          tar -xf C:/tools/dcmtk.zip -C C:/tools
+
+      - name: Install doxygen
+        run: choco install doxygen.install --version=1.13.2 -y
+
+      - name: Install graphviz (graphviz dot is required for doxygen)
+        run: choco install graphviz --version=12.2.1 -y
+
+      - name: Install aqt
+        shell: cmd
+        run: |
+          choco install aqt --version=3.2.1 -y
+
+      - name: Install Qt5
+        shell: cmd
+        run: |
+          mkdir C:\Qt5
+          cd /d C:\Qt5
+          aqt install-qt windows desktop 5.15.2 win64_msvc2019_64
+
+      - name: Build oct_cpp_framework
+        run: |
+          cd oct_cpp_framework
+          mkdir build && cd build
+          cmake -G "Visual Studio 17 2022" ..
+          cmake --build . --config Release
+
+      - name: Build LibE2E
+        run: |
+          cd LibE2E
+          mkdir build && cd build
+          cmake -G "Visual Studio 17 2022" ..
+          cmake --build . --config Release
+
+      - name: Build LibOctData
+        run: |
+          cd LibOctData
+          mkdir build && cd build
+          cmake -G "Visual Studio 17 2022" -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON ..
+          cmake --build . --config Release
+
+      - name: Fetch latest commit hash
+        id: get_commit_hash
+        run: echo "hash=$(git rev-parse --short HEAD)" >> $ENV:GITHUB_OUTPUT
+
+      - name: Build OCT-Marker
+        env:
+          RELEASE_NAME: oct-marker-win32-x64-${{ steps.get_commit_hash.outputs.hash }}
+        run: |
+          cd OCT-Marker
+          mkdir build && cd build
+          cmake -G "Visual Studio 17 2022" `
+            -DCREATE_DOCUMENTATION=ON ..
+          cmake --build . --config Release
+          Rename-Item -Path ".\Release" -NewName $env:RELEASE_NAME
+
+      - name: Build convert_oct_data
+        run: |
+          cd convert_oct_data
+          mkdir build && cd build
+          cmake -G "Visual Studio 17 2022" ..
+          cmake --build . --config Release          
+
+      - name: Copy deps to OCT-Marker release
+        env:
+          Qt5_ROOT: C:/Qt5/5.15.2/msvc2019_64
+          RELEASE_NAME: oct-marker-win32-x64-${{ steps.get_commit_hash.outputs.hash }}
+          TIFF_RELEASE: C:/tools/tiff-4.7.0/libtiff/Release
+          ZLIB_RELEASE: C:/tools/zlib-1.3.1/build/Release
+        run: |
+          cd OCT-Marker/build/$env:RELEASE_NAME
+
+          cp ${{ github.workspace }}/LibOctData/build/Release/octdata.dll .
+          cp ${{ github.workspace }}/convert_oct_data/build/Release/convert_oct_data.exe .
+          cp ${{ github.workspace }}/OCT-Marker/build/octmarker-de.qm .
+
+          cp $env:opencv_dir/x64/vc16/bin/opencv_world4110.dll .
+                    
+          cp $env:OpenJPEG_DIR/bin/openjp2.dll .
+          cp $env:TIFF_RELEASE/tiff.dll .
+          cp $env:ZLIB_RELEASE/zlib.dll .
+
+          & "$env:Qt5_ROOT/bin/windeployqt.exe" octmarker.exe
+
+      - name: Create a zip flie
+        env:
+          RELEASE_NAME: oct-marker-win32-x64-${{ steps.get_commit_hash.outputs.hash }}
+        run: |
+          cd OCT-Marker/build
+          powershell Compress-Archive -Path $env:RELEASE_NAME -DestinationPath "$env:RELEASE_NAME.zip"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_NAME: oct-marker-win32-x64-${{ steps.get_commit_hash.outputs.hash }}
+        with:
+          files: OCT-Marker/build/${{ env.RELEASE_NAME }}.zip
+          body: Release created automatically from workflow.
+          draft: true
+          tag_name: ${{ steps.get_commit_hash.outputs.hash }}
