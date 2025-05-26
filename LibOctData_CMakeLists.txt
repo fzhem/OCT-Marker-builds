@@ -60,6 +60,8 @@ endif()
 
 if(BUILD_WITH_SUPPORT_DICOM)
 	find_package(DCMTK REQUIRED)
+	
+
 	find_package(OpenJPEG)
 	list(APPEND import_srcs import/dicom)
 	include_directories(SYSTEM ${DCMTK_INCLUDE_DIRS})
@@ -206,10 +208,8 @@ ENDIF()
 if(DEFINED DCMTK_FOUND)
     add_definitions(-DUSE_DCMTK)
 
-    set(DCMTK_LIB_DIR "${DCMTK_DIR}/lib")
-
-    file(GLOB DCMTK_LIBS "${DCMTK_LIB_DIR}/*.lib")
-    target_link_libraries(octdata PRIVATE ${DCMTK_LIBS} Iphlpapi.lib Netapi32.lib)
+    target_link_libraries(octdata PRIVATE DCMTK::dcmdata DCMTK::dcmimgle)
+    target_include_directories(octdata PRIVATE ${DCMTK_INCLUDE_DIRS})
 endif()
 
 target_link_libraries(octdata PRIVATE ${OPENJPEG_LIBRARIES} ${TIFF_LIBRARIES} ${OpenCV_LIBRARIES} ${Boost_LIBRARIES} ${ZLIB_LIBRARIES})
