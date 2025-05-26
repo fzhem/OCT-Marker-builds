@@ -203,7 +203,7 @@ jobs:
       - name: Build LibOctData
         run: |
           cd LibOctData
-          curl -L -o CMakeLists.txt https://raw.githubusercontent.com/fzhem/OCT-Marker-builds/refs/heads/dev/LibOctData_CMakeLists.txt
+          curl -L -o CMakeLists.txt https://raw.githubusercontent.com/fzhem/OCT-Marker-builds/refs/heads/main/LibOctData_CMakeLists.txt
           mkdir build && cd build
           cmake -G "Visual Studio 17 2022" `
             -DBUILD_WITH_SUPPORT_DICOM=ON `
@@ -251,7 +251,7 @@ jobs:
 
           cp ${{ github.workspace }}/LibOctData/build/Release/octdata.dll .
           cp ${{ github.workspace }}/convert_oct_data/build/Release/convert_oct_data.exe .
-          
+
           cp ${{ github.workspace }}/OCT-Marker/build/octmarker-de.qm .
           mv ${{ github.workspace }}/OCT-Marker/build/html .
           mv ${{ github.workspace }}/OCT-Marker/build/latex .
