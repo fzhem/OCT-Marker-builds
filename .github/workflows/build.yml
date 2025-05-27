@@ -212,6 +212,9 @@ jobs:
           cmake --build . --config Release
 
       - name: Build octdata4python wheels
+        env:
+          TIFF_RELEASE: C:/tools/tiff-4.7.0/libtiff/Release
+          ZLIB_RELEASE: C:/tools/zlib-1.3.1/build/Release
         run: |
           cd octdata4python
           powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
