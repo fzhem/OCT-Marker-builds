@@ -28,6 +28,7 @@ jobs:
           git clone https://github.com/fzhem/LibOctData.git
           git clone https://github.com/kaygdev/OCT-Marker.git
           git clone https://github.com/kaygdev/convert_oct_data.git
+          git clone https://github.com/fzhem/octdata4python.git
 
       - name: Add missing boost find_package
         run: |
@@ -210,13 +211,34 @@ jobs:
             -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON ..
           cmake --build . --config Release
 
+      - name: Build octdata4python wheels
+        run: |
+          cd octdata4python
+          powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+          uv sync
+          mkdir octdata4python
+          mv __init__.py octdata4python/__init__.py
+          cp ${{ github.workspace }}/LibOctData/build/Release/octdata.dll octdata4python/
+
+          cp $env:DCMTK_DIR/bin/dcmdata.dll octdata4python/
+          cp $env:DCMTK_DIR/bin/oficonv.dll octdata4python/
+          cp $env:DCMTK_DIR/bin/oflog.dll octdata4python/
+          cp $env:DCMTK_DIR/bin/ofstd.dll octdata4python/
+
+          cp $env:opencv_dir/x64/vc16/bin/opencv_world4110.dll octdata4python/
+                    
+          cp $env:OpenJPEG_DIR/bin/openjp2.dll octdata4python/
+          cp $env:TIFF_RELEASE/tiff.dll octdata4python/
+          cp $env:ZLIB_RELEASE/zlib.dll octdata4python/
+          .venv/bin/python3 -m build
+
       - name: Fetch latest commit hash
         id: get_commit_hash
         run: echo "hash=$(git rev-parse --short HEAD)" >> $ENV:GITHUB_OUTPUT
 
       - name: Build OCT-Marker
         env:
-          RELEASE_NAME: oct-marker-win32-x64-${{ steps.get_commit_hash.outputs.hash }}
+          OCT_MARKER_RELEASE_NAME: oct-marker-win32-x64-${{ steps.get_commit_hash.outputs.hash }}
         run: |
           cd OCT-Marker
           mkdir build && cd build
@@ -224,7 +246,7 @@ jobs:
             -DCREATE_DOCUMENTATION=ON `
             -DDOXYGEN_EXECUTABLE=C:\tools\doxygen\doxygen.exe ..
           cmake --build . --config Release
-          Rename-Item -Path ".\Release" -NewName $env:RELEASE_NAME
+          Rename-Item -Path ".\Release" -NewName $env:OCT_MARKER_RELEASE_NAME
 
       - name: Generate OCT-Marker docs
         shell: cmd
@@ -242,11 +264,11 @@ jobs:
       - name: Copy deps to OCT-Marker release
         env:
           Qt5_ROOT: C:/Qt5/5.15.2/msvc2019_64
-          RELEASE_NAME: oct-marker-win32-x64-${{ steps.get_commit_hash.outputs.hash }}
+          OCT_MARKER_RELEASE_NAME: oct-marker-win32-x64-${{ steps.get_commit_hash.outputs.hash }}
           TIFF_RELEASE: C:/tools/tiff-4.7.0/libtiff/Release
           ZLIB_RELEASE: C:/tools/zlib-1.3.1/build/Release
         run: |
-          cd OCT-Marker/build/$env:RELEASE_NAME
+          cd OCT-Marker/build/$env:OCT_MARKER_RELEASE_NAME
 
           cp ${{ github.workspace }}/LibOctData/build/Release/octdata.dll .
           cp ${{ github.workspace }}/convert_oct_data/build/Release/convert_oct_data.exe .
@@ -268,20 +290,21 @@ jobs:
 
           & "$env:Qt5_ROOT/bin/windeployqt.exe" octmarker.exe
 
-      - name: Create a zip flie
+      - name: Create an OCT_Marker zip flie
         env:
-          RELEASE_NAME: oct-marker-win32-x64-${{ steps.get_commit_hash.outputs.hash }}
+          OCT_MARKER_RELEASE_NAME: oct-marker-win32-x64-${{ steps.get_commit_hash.outputs.hash }}
         run: |
           cd OCT-Marker/build
-          powershell Compress-Archive -Path $env:RELEASE_NAME -DestinationPath "$env:RELEASE_NAME.zip"
+          powershell Compress-Archive -Path $env:OCT_MARKER_RELEASE_NAME -DestinationPath "$env:OCT_MARKER_RELEASE_NAME.zip"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_NAME: oct-marker-win32-x64-${{ steps.get_commit_hash.outputs.hash }}
+          OCT_MARKER_RELEASE_NAME: oct-marker-win32-x64-${{ steps.get_commit_hash.outputs.hash }}
         with:
-          files: OCT-Marker/build/${{ env.RELEASE_NAME }}.zip
+          files: |
+            OCT-Marker/build/${{ env.OCT_MARKER_RELEASE_NAME }}.zip
           body: Release created automatically from workflow.
           draft: true
           tag_name: ${{ steps.get_commit_hash.outputs.hash }}
