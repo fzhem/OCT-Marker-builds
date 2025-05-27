@@ -106,7 +106,7 @@ jobs:
         shell: cmd
         run: |
           cd /d C:/local/boost_1_88_0
-          b2 -j%NUMBER_OF_PROCESSORS% --with-iostreams --with-locale --with-log --with-numpy --with-python --with-program_options --with-serialization --prefix=C:/Boost install
+          b2 -j%NUMBER_OF_PROCESSORS% --with-iostreams --with-locale --with-log --with-python --with-program_options --with-serialization --prefix=C:/Boost install
 
       - name: Save Boost build cache
         uses: actions/cache/save@v4
