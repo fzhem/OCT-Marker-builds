@@ -25,7 +25,7 @@ jobs:
           echo "Cloning core dev forks with OpenCV fixes..."
           git clone https://github.com/kaygdev/oct_cpp_framework.git
           git clone https://github.com/kaygdev/LibE2E.git
-          git clone https://github.com/kaygdev/LibOctData.git
+          git clone https://github.com/fzhem/LibOctData.git
           git clone https://github.com/kaygdev/OCT-Marker.git
           git clone https://github.com/kaygdev/convert_oct_data.git
 
@@ -203,7 +203,6 @@ jobs:
       - name: Build LibOctData
         run: |
           cd LibOctData
-          curl -L -o CMakeLists.txt https://raw.githubusercontent.com/fzhem/OCT-Marker-builds/refs/heads/main/LibOctData_CMakeLists.txt
           mkdir build && cd build
           cmake -G "Visual Studio 17 2022" `
             -DBUILD_WITH_SUPPORT_DICOM=ON `
