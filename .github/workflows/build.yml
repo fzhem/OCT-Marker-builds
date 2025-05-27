@@ -212,9 +212,6 @@ jobs:
           cmake --build . --config Release
 
       - name: Build octdata4python wheels
-        env:
-          TIFF_RELEASE: C:/tools/tiff-4.7.0/libtiff/Release
-          ZLIB_RELEASE: C:/tools/zlib-1.3.1/build/Release
         run: |
           cd octdata4python
           powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
@@ -232,9 +229,7 @@ jobs:
           cp $env:opencv_dir/x64/vc16/bin/opencv_world4110.dll octdata4python/
                     
           cp $env:OpenJPEG_DIR/bin/openjp2.dll octdata4python/
-          cp $env:TIFF_RELEASE/tiff.dll octdata4python/
-          cp $env:ZLIB_RELEASE/zlib.dll octdata4python/
-          .venv/bin/python3 -m build
+          .venv/bin/python -m build
 
       - name: Fetch latest commit hash
         id: get_commit_hash
