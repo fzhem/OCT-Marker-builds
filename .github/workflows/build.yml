@@ -225,7 +225,11 @@ jobs:
 
       - name: Build octdata4python wheels
         env:
-          CMAKE_ARGS: -DPYTHON_INCLUDE_DIR=C:/hostedtoolcache/windows/Python/3.9.13/x64/include
+            CMAKE_ARGS: >
+              -DPython3_INCLUDE_DIR=C:/hostedtoolcache/windows/Python/3.9.13/x64/include
+              -DPython3_LIBRARY=C:/hostedtoolcache/windows/Python/3.9.13/x64/libs/python39.lib
+              -DCMAKE_CXX_FLAGS="/I C:/hostedtoolcache/windows/Python/3.9.13/x64/include"
+              -DPYTHON_EXECUTABLE=C:/hostedtoolcache/windows/Python/3.9.13/x64/python.exe
         run: |
           cd octdata4python
           powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
