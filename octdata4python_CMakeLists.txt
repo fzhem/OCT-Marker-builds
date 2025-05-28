@@ -3,8 +3,7 @@ cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
 project(octdata4python LANGUAGES CXX)
 
 cmake_policy(SET CMP0167 NEW)
-find_package(Python3 REQUIRED COMPONENTS Interpreter)
-find_package(PythonLibs 3 REQUIRED)
+find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
 find_package(Boost COMPONENTS system python numpy REQUIRED)
 find_package(LibOctData REQUIRED)
 find_package(OpenCV REQUIRED COMPONENTS core)
@@ -32,7 +31,7 @@ target_link_libraries(octdata4python
     Boost::python
     Boost::numpy
     opencv_core
-    Python3::Python
+    ${PYTHON_LIBRARIES}
 )
 
 install(TARGETS octdata4python LIBRARY DESTINATION octdata4python)
