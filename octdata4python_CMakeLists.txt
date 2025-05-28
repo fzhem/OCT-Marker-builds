@@ -8,9 +8,9 @@ find_package(Boost COMPONENTS python numpy REQUIRED)
 find_package(LibOctData REQUIRED)
 find_package(OpenCV REQUIRED COMPONENTS core)
 
-message(STATUS "PYTHON_LIBRARIES = ${PYTHON_LIBRARIES}")
+message(STATUS "PYTHON_LIBRARY = ${PYTHON_LIBRARY}")
 message(STATUS "PYTHON_EXECUTABLE = ${PYTHON_EXECUTABLE}")
-message(STATUS "PYTHON_INCLUDE_DIRS = ${PYTHON_INCLUDE_DIRS}")
+message(STATUS "PYTHON_INCLUDE_DIR = ${PYTHON_INCLUDE_DIR}")
 message(STATUS "Boost_LIBRARIES = ${Boost_LIBRARIES}")
 message(STATUS "OpenCV_LIBS = ${OpenCV_LIBS}")
 
@@ -27,7 +27,7 @@ set_target_properties(octdata4python PROPERTIES PREFIX "")
 
 target_include_directories(octdata4python
     PRIVATE
-    ${PYTHON_INCLUDE_DIRS}
+    ${PYTHON_INCLUDE_DIR}
 )
 target_link_libraries(octdata4python
     PRIVATE
@@ -35,7 +35,7 @@ target_link_libraries(octdata4python
     Boost::python
     Boost::numpy
     ${OpenCV_LIBS}
-    ${PYTHON_LIBRARIES}
+    ${PYTHON_LIBRARY}
 )
 
 install(TARGETS octdata4python LIBRARY DESTINATION octdata4python)
