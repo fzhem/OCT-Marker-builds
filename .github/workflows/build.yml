@@ -215,8 +215,6 @@ jobs:
           cmake --build . --config Release
 
       - name: Build octdata4python wheels
-        env:
-          INCLUDE: C:/hostedtoolcache/windows/Python/3.9.13/include
         run: |
           cd octdata4python
           powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
@@ -234,6 +232,8 @@ jobs:
           cp $env:opencv_dir/x64/vc16/bin/opencv_world4110.dll octdata4python/
                     
           cp $env:OpenJPEG_DIR/bin/openjp2.dll octdata4python/
+          $pythonRoot = (Get-Command python).Path | Split-Path | Split-Path
+          echo "INCLUDE=$pythonRoot\include" | Out-File -FilePath $env:GITHUB_ENV -Append
           .venv/Scripts/python -m build
 
       - name: Fetch latest commit hash
