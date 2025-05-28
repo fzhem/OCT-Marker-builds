@@ -30,17 +30,6 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           pip install numpy==1.26.0
 
-      - name: 🔍 Search for python39.lib on C:\
-        shell: pwsh
-        run: |
-          Write-Host "🔎 Scanning C:\ for python39.lib, this might take a minute..."
-          $results = Get-ChildItem -Path C:\hostedtoolcache -Filter python39.lib -Recurse -ErrorAction SilentlyContinue -Force
-          if ($results) {
-            $results | ForEach-Object { Write-Host "📁 Found: $($_.FullName)" }
-          } else {
-            Write-Host "❌ No python39.lib found on C:\ drive"
-          }
-
       - name: Clone required forks
         run: |
           echo "Cloning core dev forks with OpenCV fixes..."
@@ -237,7 +226,7 @@ jobs:
       - name: Build octdata4python wheels
         env:
             CMAKE_ARGS: >
-              -DPython3_LIBRARY=C:/hostedtoolcache/windows/Python/3.9.13/x64/libs/python3.lib
+              -DCMAKE_CXX_FLAGS="/I C:/hostedtoolcache/windows/Python/3.9.13/x64/include"
         run: |
           cd octdata4python
           powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
