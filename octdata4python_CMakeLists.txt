@@ -17,7 +17,6 @@ find_package(OpenCV REQUIRED COMPONENTS core)
 add_library(octdata4python MODULE octdata4python.cpp)
 set_target_properties(octdata4python PROPERTIES PREFIX "")
 
-target_compile_definitions(octdata4python PRIVATE BOOST_PYTHON_STATIC_LIB)
 target_link_libraries(octdata4python
     PRIVATE
     LibOctData::octdata
