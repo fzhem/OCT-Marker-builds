@@ -227,9 +227,6 @@ jobs:
           cmake --build . --config Release --target install
 
       - name: Build octdata4python wheels
-        env:
-          CMAKE_ARGS: >
-            -DBOOST_ROOT="C:/Boost"
         run: |
           cd octdata4python
           curl -L -o CMakeLists.txt https://raw.githubusercontent.com/fzhem/OCT-Marker-builds/refs/heads/dev/octdata4python_CMakeLists.txt
@@ -238,6 +235,7 @@ jobs:
           uv sync --extra windows
           mkdir octdata4python
           mv __init__.py octdata4python/__init__.py
+          .venv/Scripts/python -m build
           cp ${{ github.workspace }}/LibOctData/build/Release/octdata.dll octdata4python/
 
           cp $env:DCMTK_DIR/bin/dcmdata.dll octdata4python/
@@ -248,7 +246,6 @@ jobs:
           cp $env:opencv_dir/x64/vc16/bin/opencv_world4110.dll octdata4python/
                     
           cp $env:OpenJPEG_DIR/bin/openjp2.dll octdata4python/
-          .venv/Scripts/python -m build --installer=uv
 
       - name: Fetch latest commit hash
         id: get_commit_hash
