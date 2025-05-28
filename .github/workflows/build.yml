@@ -241,7 +241,7 @@ jobs:
           mv __init__.py octdata4python/__init__.py
           .venv/Scripts/python -m build
           cp ${{ github.workspace }}/LibOctData/build/Release/octdata.dll octdata4python/
-          .venv/bin/delvewheel repair dist/octdata4python-0.1.0-cp39-cp39-win_amd64.whl `
+          .venv/Scripts/delvewheel repair dist/octdata4python-0.1.0-cp39-cp39-win_amd64.whl `
             --add-path=${{ github.workspace }}/LibOctData/build/Release `
             --add-path=C:/Boost/lib `
             --add-path=$env:OpenCV_DIR/x64/vc16/bin `
