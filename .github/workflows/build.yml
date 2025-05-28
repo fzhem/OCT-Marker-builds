@@ -227,7 +227,8 @@ jobs:
         env:
           CMAKE_ARGS: >
             -DOpenCV_LIBS="C:/tools/opencv/build/x64/vc16/lib/opencv_world4110.lib"
-            -DPYTHON_LIBRARIES="C:/hostedtoolcache/windows/Python/3.9.13/x64/libs/python39.lib"
+            -DPYTHON_INCLUDE_DIR="C:/hostedtoolcache/windows/Python/3.9.13/x64/include"
+            -DPYTHON_LIBRARY="C:/hostedtoolcache/windows/Python/3.9.13/x64/libs/python39.lib"
         run: |
           cd octdata4python
           curl -L -o CMakeLists.txt https://raw.githubusercontent.com/fzhem/OCT-Marker-builds/refs/heads/dev/octdata4python_CMakeLists.txt
