@@ -106,7 +106,7 @@ jobs:
 
       - name: Run Boost Bootstrap Script
         env:
-          BOOST_BUILD_PATH: "{{ github.workspace }}/OCT-Marker-builds"
+          BOOST_BUILD_PATH: ${{ github.workspace }}\OCT-Marker-builds
         if: steps.restore-boost-build-cache.outputs.cache-hit != 'true'
         shell: cmd
         run: |
@@ -115,7 +115,7 @@ jobs:
 
       - name: Build and Install Boost Libraries
         env:
-          BOOST_BUILD_PATH: "{{ github.workspace }}/OCT-Marker-builds"
+          BOOST_BUILD_PATH: ${{ github.workspace }}\OCT-Marker-builds
         if: steps.restore-boost-build-cache.outputs.cache-hit != 'true'
         shell: cmd
         run: |
