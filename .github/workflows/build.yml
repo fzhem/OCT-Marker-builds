@@ -238,15 +238,8 @@ jobs:
           mv __init__.py octdata4python/__init__.py
           .venv/Scripts/python -m build
           cp ${{ github.workspace }}/LibOctData/build/Release/octdata.dll octdata4python/
-
-          cp $env:DCMTK_DIR/bin/dcmdata.dll octdata4python/
-          cp $env:DCMTK_DIR/bin/oficonv.dll octdata4python/
-          cp $env:DCMTK_DIR/bin/oflog.dll octdata4python/
-          cp $env:DCMTK_DIR/bin/ofstd.dll octdata4python/
-
-          cp $env:opencv_dir/x64/vc16/bin/opencv_world4110.dll octdata4python/
-                    
-          cp $env:OpenJPEG_DIR/bin/openjp2.dll octdata4python/
+          .venv/Scripts/delvewheel show dist/octdata4python-0.1.0-cp39-cp39-win_amd64.whl
+          .venv/Scripts/delvewheel repair dist/octdata4python-0.1.0-cp39-cp39-win_amd64.whl
 
       - name: Fetch latest commit hash
         id: get_commit_hash
