@@ -226,7 +226,7 @@ jobs:
       - name: Build octdata4python wheels
         env:
           CMAKE_ARGS: >
-            -DOpenCV_LIBS="C:/tools/opencv/build"
+            -DOpenCV_LIBS="C:/tools/opencv/build/x64/vc16/lib/opencv_world4110.lib"
             -DPYTHON_LIBRARIES="C:/hostedtoolcache/windows/Python/3.9.13/x64/libs/python39.lib"
         run: |
           cd octdata4python
