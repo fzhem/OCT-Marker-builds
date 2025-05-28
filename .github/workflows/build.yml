@@ -215,6 +215,8 @@ jobs:
           cmake --build . --config Release
 
       - name: Build octdata4python wheels
+        env:
+          INCLUDE: C:/hostedtoolcache/windows/Python/3.9.13/x64/include
         run: |
           cd octdata4python
           powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
