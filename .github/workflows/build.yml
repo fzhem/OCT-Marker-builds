@@ -221,7 +221,7 @@ jobs:
           cd octdata4python
           powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
           $env:Path = "C:\Users\runneradmin\.local\bin;$env:Path"
-          uv sync
+          uv sync --extra windows
           mkdir octdata4python
           mv __init__.py octdata4python/__init__.py
           cp ${{ github.workspace }}/LibOctData/build/Release/octdata.dll octdata4python/
