@@ -216,9 +216,7 @@ jobs:
 
       - name: Build octdata4python wheels
         env:
-          INCLUDE: C:\hostedtoolcache\windows\Python\3.9.13\x64\include
-          CFLAGS: /IC:\hostedtoolcache\windows\Python\3.9.13\x64\include
-          CPPFLAGS: /IC:\hostedtoolcache\windows\Python\3.9.13\x64\include
+          CMAKE_ARGS: -DPython3_ROOT_DIR=C:/hostedtoolcache/windows/Python/3.9.13/x64
         run: |
           cd octdata4python
           powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
@@ -236,7 +234,7 @@ jobs:
           cp $env:opencv_dir/x64/vc16/bin/opencv_world4110.dll octdata4python/
                     
           cp $env:OpenJPEG_DIR/bin/openjp2.dll octdata4python/
-          .venv/Scripts/python -m build
+          .venv/Scripts/python -m build --installer=uv
 
       - name: Fetch latest commit hash
         id: get_commit_hash
