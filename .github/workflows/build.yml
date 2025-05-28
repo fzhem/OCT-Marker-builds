@@ -25,21 +25,10 @@ jobs:
         with:
           python-version: '3.9.13'
 
-      - name: Install dependencies
+      - name: Install dependencies (numpy needed for boost)
         run: |
           python -m pip install --upgrade pip setuptools wheel
           pip install numpy==1.26.0
-
-      - name: 🔍 Search for pyconfig.h on C:\
-        shell: pwsh
-        run: |
-          Write-Host "🔎 Scanning C:\ for pyconfig.h, this might take a minute..."
-          $results = Get-ChildItem -Path C:\ -Filter pyconfig.h -Recurse -ErrorAction SilentlyContinue -Force
-          if ($results) {
-            $results | ForEach-Object { Write-Host "📁 Found: $($_.FullName)" }
-          } else {
-            Write-Host "❌ No pyconfig.h found on C:\ drive"
-          }
 
       - name: Clone required forks
         run: |
@@ -235,6 +224,8 @@ jobs:
           cmake --build . --config Release
 
       - name: Build octdata4python wheels
+        env:
+          CMAKE_ARGS: -DPYTHON_INCLUDE_DIR=C:/hostedtoolcache/windows/Python/3.9.13/x64/include
         run: |
           cd octdata4python
           powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
