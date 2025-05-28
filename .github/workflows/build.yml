@@ -99,7 +99,7 @@ jobs:
         shell: cmd
         run: |
           cd /d C:/local/boost_1_88_0
-          bootstrap.bat
+          bootstrap.bat --with-libraries=python
 
       - name: Build and Install Boost Libraries
         if: steps.restore-boost-build-cache.outputs.cache-hit != 'true'
