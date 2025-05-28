@@ -27,9 +27,7 @@ set_target_properties(octdata4python PROPERTIES PREFIX "")
 target_link_libraries(octdata4python
     PRIVATE
     LibOctData::octdata
-    Boost::system
     Boost::python
-    Boost::numpy
     opencv_core
     Python3::Python
 )
