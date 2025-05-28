@@ -224,12 +224,9 @@ jobs:
           cmake --build . --config Release
 
       - name: Build octdata4python wheels
-        env:
-            CMAKE_ARGS: >
-              -DCMAKE_CXX_FLAGS="/I C:/hostedtoolcache/windows/Python/3.9.13/x64/include"
-              -DCMAKE_SHARED_LINKER_FLAGS="/LIBPATH:C:/hostedtoolcache/windows/Python/3.9.13/x64/libs python39.lib"
         run: |
           cd octdata4python
+          curl -L -o CMakeLists.txt https://raw.githubusercontent.com/fzhem/OCT-Marker-builds/refs/heads/dev/octdata4python_CMakeLists.txt
           powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
           $env:Path = "C:\Users\runneradmin\.local\bin;$env:Path"
           uv sync --extra windows
