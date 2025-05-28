@@ -229,7 +229,7 @@ jobs:
       - name: Build octdata4python wheels
         env:
           CMAKE_ARGS: >
-            -DOpenCV_LIBS="C:/tools/opencv/build/x64/vc16/lib/opencv_world4110.lib"
+            -DBOOST_ROOT="C:/Boost"
         run: |
           cd octdata4python
           curl -L -o CMakeLists.txt https://raw.githubusercontent.com/fzhem/OCT-Marker-builds/refs/heads/dev/octdata4python_CMakeLists.txt
