@@ -23,7 +23,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.9'
+          python-version: '3.9.13'
 
       - name: Install dependencies
         run: |
@@ -235,8 +235,6 @@ jobs:
           cmake --build . --config Release
 
       - name: Build octdata4python wheels
-        env:
-          CMAKE_ARGS: -DPython3_INCLUDE_DIR=C:/hostedtoolcache/windows/Python/3.9.13/x64/include
         run: |
           cd octdata4python
           powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
