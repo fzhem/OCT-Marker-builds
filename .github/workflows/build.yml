@@ -229,7 +229,7 @@ jobs:
           cp $env:opencv_dir/x64/vc16/bin/opencv_world4110.dll octdata4python/
                     
           cp $env:OpenJPEG_DIR/bin/openjp2.dll octdata4python/
-          .venv/bin/python -m build
+          .venv/Scripts/python -m build
 
       - name: Fetch latest commit hash
         id: get_commit_hash
