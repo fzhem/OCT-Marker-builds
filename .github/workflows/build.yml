@@ -20,6 +20,16 @@ jobs:
       - name: Checkout main repo
         uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          pip install numpy==1.26.0
+
       - name: Clone required forks
         run: |
           echo "Cloning core dev forks with OpenCV fixes..."
@@ -99,7 +109,6 @@ jobs:
         shell: cmd
         run: |
           cd /d C:/local/boost_1_88_0
-          python -m pip install numpy==1.26.0
           bootstrap.bat --with-libraries=python
 
       - name: Build and Install Boost Libraries
