@@ -31,7 +31,7 @@ target_link_libraries(octdata4python
     Boost::python
     Boost::numpy
     opencv_core
-    ${PYTHON_LIBRARIES}
+    Python3::Python
 )
 
 install(TARGETS octdata4python LIBRARY DESTINATION octdata4python)
