@@ -25,13 +25,17 @@ add_library(octdata4python MODULE octdata4python.cpp)
 
 set_target_properties(octdata4python PROPERTIES PREFIX "")
 
+target_include_directories(octdata4python
+    PRIVATE
+    ${PYTHON_INCLUDE_DIRS}
+)
 target_link_libraries(octdata4python
     PRIVATE
     LibOctData::octdata
     Boost::python
     Boost::numpy
-   ${OpenCV_LIBS}
-   ${PYTHON_LIBRARIES}
+    ${OpenCV_LIBS}
+    ${PYTHON_LIBRARIES}
 )
 
 install(TARGETS octdata4python LIBRARY DESTINATION octdata4python)
