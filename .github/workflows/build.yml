@@ -214,6 +214,30 @@ jobs:
             -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON ..
           cmake --build . --config Release
 
+      - name: Check Python include path
+        shell: pwsh
+        run: |
+          $python = Get-Command python | Select-Object -ExpandProperty Source
+          $pythonRoot = Split-Path (Split-Path $python)
+          Write-Host "Python root: $pythonRoot"
+          if (Test-Path "$pythonRoot\include\pyconfig.h") {
+            Write-Host "✅ Found pyconfig.h at $pythonRoot\include"
+          } else {
+            Write-Host "❌ pyconfig.h not found in $pythonRoot\include"
+            Get-ChildItem -Path $pythonRoot -Recurse -Filter pyconfig.h
+          }
+
+      - name: 🔍 Search for pyconfig.h on C:\
+        shell: pwsh
+        run: |
+          Write-Host "🔎 Scanning C:\ for pyconfig.h, this might take a minute..."
+          $results = Get-ChildItem -Path C:\ -Filter pyconfig.h -Recurse -ErrorAction SilentlyContinue -Force
+          if ($results) {
+            $results | ForEach-Object { Write-Host "📁 Found: $($_.FullName)" }
+          } else {
+            Write-Host "❌ No pyconfig.h found on C:\ drive"
+          }
+
       - name: Build octdata4python wheels
         run: |
           cd octdata4python
