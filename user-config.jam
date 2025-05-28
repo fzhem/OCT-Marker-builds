@@ -1,7 +1,8 @@
-ECHO 📜 user-config.jam loaded! ;
+local PYROOT = [ modules.peek : Python3_ROOT_DIR ] ;
+
 using python
   : 3.9
-  : [ modules.peek : Python3_ROOT_DIR ]/Scripts/python.exe
-  : [ modules.peek : Python3_ROOT_DIR ]/include
-  : [ modules.peek : Python3_ROOT_DIR ]/libs
+  : $(PYROOT)/Scripts/python.exe
+  : $(PYROOT)/include
+  : $(PYROOT)/libs
   ;
