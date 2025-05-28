@@ -99,6 +99,7 @@ jobs:
         shell: cmd
         run: |
           cd /d C:/local/boost_1_88_0
+          python -m pip install numpy==1.26.0
           bootstrap.bat --with-libraries=python
 
       - name: Build and Install Boost Libraries
