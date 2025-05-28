@@ -3,9 +3,16 @@ cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
 project(octdata4python LANGUAGES CXX)
 
 cmake_policy(SET CMP0167 NEW)
-find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+find_package(PythonLibs 3 REQUIRED)
+find_package(Boost COMPONENTS system python numpy REQUIRED)
 find_package(LibOctData REQUIRED)
 find_package(OpenCV REQUIRED COMPONENTS core)
+
+message(STATUS "PYTHON_LIBRARIES = ${PYTHON_LIBRARIES}")
+message(STATUS "PYTHON_EXECUTABLE = ${PYTHON_EXECUTABLE}")
+message(STATUS "PYTHON_INCLUDE_DIRS = ${PYTHON_INCLUDE_DIRS}")
+message(STATUS "Boost_LIBRARIES = ${Boost_LIBRARIES}")
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -21,6 +28,9 @@ set_target_properties(octdata4python PROPERTIES PREFIX "")
 target_link_libraries(octdata4python
     PRIVATE
     LibOctData::octdata
+    Boost::system
+    Boost::python
+    Boost::numpy
     opencv_core
     Python3::Python
 )
