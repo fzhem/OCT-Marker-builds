@@ -119,9 +119,8 @@ jobs:
           b2 -j%NUMBER_OF_PROCESSORS% variant=release address-model=64 link=static threading=multi ^
             --with-iostreams --with-locale --with-log --with-python --with-program_options --with-serialization ^
             --prefix=C:/Boost ^
-              python=3.9 ^
-              include=C:/hostedtoolcache/windows/Python/3.9.13/x64/include ^
-              libpath=C:/hostedtoolcache/windows/Python/3.9.13/x64/libs install
+              include=%Python3_ROOT_DIR%/x64/include ^
+              libpath=%Python3_ROOT_DIR%//x64/libs install
 
       - name: Save Boost build cache
         uses: actions/cache/save@v4
