@@ -118,7 +118,7 @@ jobs:
         shell: cmd
         run: |
           cd /d C:/local/boost_1_88_0
-          b2 -j%NUMBER_OF_PROCESSORS% variant=release address-model=64 link=static threading=multi ^
+          b2 -j%NUMBER_OF_PROCESSORS% toolset=msvc-14.3 address-model=64 architecture=x86 link=static threading=multi runtime-link=shared --build-type=complete stage  ^
             --with-iostreams --with-locale --with-log --with-python --with-program_options --with-serialization ^
             --debug-configuration ^
             --prefix=C:/Boost install
