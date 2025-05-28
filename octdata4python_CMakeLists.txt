@@ -4,7 +4,6 @@ project(octdata4python LANGUAGES CXX)
 
 cmake_policy(SET CMP0167 NEW)
 find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
-find_package(Boost COMPONENTS python numpy REQUIRED)
 find_package(LibOctData REQUIRED)
 find_package(OpenCV REQUIRED COMPONENTS core)
 
