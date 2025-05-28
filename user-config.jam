@@ -1,0 +1,6 @@
+using python
+  : 3.9                                    # Python version
+  : $(Python3_ROOT_DIR)\Scripts\python.exe # Python executable
+  : $(Python3_ROOT_DIR)\include            # Python includes
+  : $(Python3_ROOT_DIR)\libs               # Python libs
+  ;
