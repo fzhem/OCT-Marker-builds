@@ -2,7 +2,7 @@ local PYROOT = [ modules.peek : Python3_ROOT_DIR ] ;
 
 using python
   : 3.9
-  : $(PYROOT)\Scripts\python.exe
-  : $(PYROOT)\include
-  : $(PYROOT)\libs
+  : $(PYROOT)\\Scripts\\python.exe
+  : $(PYROOT)\\include
+  : $(PYROOT)\\libs
   ;
