@@ -320,8 +320,7 @@ jobs:
           # OCT_MARKER_RELEASE_NAME: oct-marker-win32-x64-${{ steps.get_commit_hash.outputs.hash }}
         with:
           files: |
-            # OCT-Marker/build/${{ env.OCT_MARKER_RELEASE_NAME }}.zip
-            octdata4python/octdata4python-0.1.0-cp39-cp39-win_amd64.whl
+            octdata4python/dist/octdata4python-0.1.0-cp39-cp39-win_amd64.whl
           body: Release created automatically from workflow.
           draft: true
           tag_name: ${{ steps.get_commit_hash.outputs.hash }}
