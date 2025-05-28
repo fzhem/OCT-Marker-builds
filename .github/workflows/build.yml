@@ -221,7 +221,7 @@ jobs:
             -DBUILD_WITH_SUPPORT_DICOM=ON `
             -DCMAKE_CXX_FLAGS="/Zc:__cplusplus /DNOMINMAX /EHsc" `
             -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON ..
-          cmake --build . --config Release
+          cmake --build . --config Release --target install
 
       - name: Build octdata4python wheels
         env:
