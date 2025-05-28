@@ -118,7 +118,7 @@ jobs:
         shell: cmd
         run: |
           cd /d C:/local/boost_1_88_0
-          b2 -j%NUMBER_OF_PROCESSORS% ^
+          b2 -j%NUMBER_OF_PROCESSORS% runtime-link=shared ^
             --with-iostreams --with-locale --with-log --with-python --with-program_options --with-serialization ^
             --debug-configuration ^
             --prefix=C:/Boost install
