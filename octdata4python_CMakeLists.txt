@@ -12,6 +12,7 @@ message(STATUS "PYTHON_LIBRARIES = ${PYTHON_LIBRARIES}")
 message(STATUS "PYTHON_EXECUTABLE = ${PYTHON_EXECUTABLE}")
 message(STATUS "PYTHON_INCLUDE_DIRS = ${PYTHON_INCLUDE_DIRS}")
 message(STATUS "Boost_LIBRARIES = ${Boost_LIBRARIES}")
+message(STATUS "OpenCV_LIBS = ${OpenCV_LIBS}")
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -29,8 +30,8 @@ target_link_libraries(octdata4python
     LibOctData::octdata
     Boost::python
     Boost::numpy
-    opencv_core
-    Python3::Python
+   ${OpenCV_LIBS}
+   ${PYTHON_LIBRARIES}
 )
 
 install(TARGETS octdata4python LIBRARY DESTINATION octdata4python)
