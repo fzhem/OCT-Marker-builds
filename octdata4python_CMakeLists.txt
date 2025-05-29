@@ -3,7 +3,6 @@ project(octdata4python LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
 find_package(Boost COMPONENTS python numpy REQUIRED)
 find_package(LibOctData REQUIRED)
 find_package(OpenCV REQUIRED COMPONENTS core)
@@ -36,7 +35,6 @@ target_link_libraries(octdata4python
     Boost::python
     Boost::numpy
     opencv_core
-    Python3::Python
 )
 
 install(TARGETS ${CMAKE_PROJECT_NAME} LIBRARY DESTINATION octdata4python)
