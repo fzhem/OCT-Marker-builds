@@ -23,7 +23,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.9.13'
+          python-version: '3.10.11'
 
       - name: Install dependencies (numpy needed for boost)
         run: |
@@ -109,7 +109,7 @@ jobs:
         shell: cmd
         run: |
           cd /d C:/local/boost_1_88_0
-          bootstrap.bat --with-libraries=python
+          bootstrap.bat
 
       - name: Build and Install Boost Libraries
         env:
