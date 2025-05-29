@@ -35,6 +35,7 @@ target_link_libraries(octdata4python
     Boost::python
     Boost::numpy
     opencv_core
+    Python3::Module
 )
 
 install(TARGETS ${CMAKE_PROJECT_NAME} LIBRARY DESTINATION octdata4python)
