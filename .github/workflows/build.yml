@@ -236,7 +236,9 @@ jobs:
           curl -L -o CMakeLists.txt https://raw.githubusercontent.com/fzhem/OCT-Marker-builds/refs/heads/dev/octdata4python_CMakeLists.txt
           powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
           $env:Path = "C:\Users\runneradmin\.local\bin;$env:Path"
-          uv sync --extra windows
+          $pythonRoot = "${env:RUNNER_TOOL_CACHE}\windows\Python\3.9.13\x64"
+          $env:INCLUDE = "$pythonRoot\include;$env:INCLUDE"
+          uv sync
           mkdir octdata4python
           mv __init__.py octdata4python/__init__.py
           .venv/Scripts/python -m build
