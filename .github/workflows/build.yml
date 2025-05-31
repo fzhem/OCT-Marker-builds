@@ -222,8 +222,6 @@ jobs:
           cd LibOctData
           mkdir build && cd build
           cmake -G "Visual Studio 17 2022" `
-            -DBUILD_WITH_SUPPORT_DICOM=ON `
-            -DCMAKE_CXX_FLAGS="/Zc:__cplusplus /DNOMINMAX /EHsc" `
             -DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON ..
           cmake --build . --config Release --target install
 
