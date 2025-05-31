@@ -38,7 +38,7 @@ jobs:
           git clone https://github.com/fzhem/LibOctData.git
           git clone https://github.com/kaygdev/OCT-Marker.git
           git clone https://github.com/kaygdev/convert_oct_data.git
-          git clone https://github.com/fzhem/octdata4python.git
+          git clone --branch dev https://github.com/fzhem/octdata4python.git
 
       - name: Add missing boost find_package
         run: |
