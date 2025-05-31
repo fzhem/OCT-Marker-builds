@@ -112,8 +112,8 @@ jobs:
           bootstrap.bat
 
       - name: Build and Install Boost Libraries
-        env:
-          BOOST_BUILD_PATH: ${{ github.workspace }}
+        # env:
+        #   BOOST_BUILD_PATH: ${{ github.workspace }}
         if: steps.restore-boost-build-cache.outputs.cache-hit != 'true'
         shell: cmd
         run: |
