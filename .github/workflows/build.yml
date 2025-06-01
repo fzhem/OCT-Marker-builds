@@ -14,7 +14,7 @@ jobs:
       DCMTK_DIR: C:/tools/dcmtk-20241211-ac00290
       OpenCV_DIR: C:/tools/opencv/build
       OpenJPEG_DIR: C:/tools/openjpeg-v2.5.3-windows-x64
-      Qt5_DIR: C:/Qt5/5.15.2/msvc2019_64/lib/cmake/Qt5
+      Qt6_DIR: C:/Qt6/6.9.0/msvc2022_64/lib/cmake/Qt6
 
     steps:
       - name: Checkout main repo
@@ -114,10 +114,16 @@ jobs:
           key: boost-1.88.0-build-${{ runner.os }}
           path: C:/Boost
 
-      - name: Download OpenJPEG from source
+      - name: Clone OpenJPEG
         run: |
-          curl -L -o C:/tools/openjpeg.zip https://github.com/uclouvain/openjpeg/releases/download/v2.5.3/openjpeg-v2.5.3-windows-x64.zip
-          tar -xf C:/tools/openjpeg.zip -C C:/tools
+          cd C:/repos
+          git clone --branch v2.5.3 https://github.com/uclouvain/openjpeg.git
+
+      - name: Build OpenJPEG
+        run: |
+          cd C:/repos/openjpeg
+          cmake -G "Visual Studio 17 2022" .
+          cmake --build . --config Release --target install
 
       - name: Download libtiff from source
         run: |
@@ -128,7 +134,7 @@ jobs:
         shell: cmd
         run: |
           cd /d C:/tools/tiff-4.7.0
-          cmake -G "Visual Studio 17 2022"
+          cmake -G "Visual Studio 17 2022" .
           cmake --build . --config Release --target install
 
       - name: Download DCMTK
@@ -163,28 +169,28 @@ jobs:
         run: |
           choco install aqt --version=3.2.1 -y
 
-      - name: Restore Qt5 cache
-        id: restore-qt5-cache
+      - name: Restore Qt6 cache
+        id: restore-qt6-cache
         uses: actions/cache/restore@v4
         with:
-          key: qt5-5.15.2-win64-msvc2019_64-${{ runner.os }}
-          path: C:/Qt5/5.15.2
+          key: qt6-6.9.0-win64-msvc2022_64-${{ runner.os }}
+          path: C:/Qt6/6.9.0
 
-      - name: Install Qt5
+      - name: Install Qt6
         shell: cmd
-        if: steps.restore-qt5-cache.outputs.cache-hit != 'true'
+        if: steps.restore-qt6-cache.outputs.cache-hit != 'true'
         run: |
           cd /d C:/
-          mkdir Qt5
-          cd Qt5
-          aqt install-qt windows desktop 5.15.2 win64_msvc2019_64
+          mkdir Qt6
+          cd Qt6
+          aqt install-qt windows desktop 6.9.0 win64_msvc2022_64
 
-      - name: Save Qt5 cache
+      - name: Save Qt6 cache
         uses: actions/cache/save@v4
-        if: steps.restore-qt5-cache.outputs.cache-hit != 'true'
+        if: steps.restore-qt6-cache.outputs.cache-hit != 'true'
         with:
-          key: qt5-5.15.2-win64-msvc2019_64-${{ runner.os }}
-          path: C:/Qt5/5.15.2
+          key: qt6-6.9.0-win64-msvc2022_64-${{ runner.os }}
+          path: C:/Qt6/6.9.0
 
       - name: Build oct_cpp_framework
         run: |
@@ -241,7 +247,7 @@ jobs:
 
       - name: Copy deps to OCT-Marker release
         env:
-          Qt5_ROOT: C:/Qt5/5.15.2/msvc2019_64
+          Qt6_ROOT: C:/Qt6/6.9.0/msvc2022_64
           RELEASE_NAME: oct-marker-win32-x64-${{ steps.get_commit_hash.outputs.hash }}
           TIFF_RELEASE: C:/tools/tiff-4.7.0/libtiff/Release
           ZLIB_RELEASE: C:/tools/zlib-1.3.1/build/Release
@@ -266,7 +272,7 @@ jobs:
           cp $env:TIFF_RELEASE/tiff.dll .
           cp $env:ZLIB_RELEASE/zlib.dll .
 
-          & "$env:Qt5_ROOT/bin/windeployqt.exe" octmarker.exe
+          & "$env:Qt6_ROOT/bin/windeployqt.exe" octmarker.exe
 
       - name: Create a zip flie
         env:
