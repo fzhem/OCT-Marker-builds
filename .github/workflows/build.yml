@@ -116,12 +116,12 @@ jobs:
 
       - name: Clone OpenJPEG
         run: |
+          mkdir C:/repos
           cd C:/repos
           git clone --branch v2.5.3 https://github.com/uclouvain/openjpeg.git
 
       - name: Build OpenJPEG
-        run: |
-          mkdir C:/repos
+        run: |        
           cd C:/repos/openjpeg
           cmake -G "Visual Studio 17 2022" .
           cmake --build . --config Release --target install
