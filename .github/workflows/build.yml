@@ -13,7 +13,7 @@ jobs:
       Boost_DIR: C:/Boost/lib/cmake/Boost-1.88.0
       DCMTK_DIR: C:/tools/dcmtk-20241211-ac00290
       OpenCV_DIR: C:/tools/opencv/build
-      OpenJPEG_DIR: C:/tools/openjpeg-v2.5.3-windows-x64
+      OpenJPEG_DIR: C:/Program Files (x86)/OPENJPEG
       Qt6_DIR: C:/Qt6/6.9.0/msvc2022_64/lib/cmake/Qt6
 
     steps:
@@ -26,7 +26,7 @@ jobs:
           git clone https://github.com/kaygdev/oct_cpp_framework.git
           git clone https://github.com/kaygdev/LibE2E.git
           git clone https://github.com/fzhem/LibOctData.git
-          git clone https://github.com/kaygdev/OCT-Marker.git
+          git clone --branch dev https://github.com/fzhem/OCT-Marker.git
           git clone https://github.com/kaygdev/convert_oct_data.git
 
       - name: Add missing boost find_package
